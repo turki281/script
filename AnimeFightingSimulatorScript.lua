@@ -1,90 +1,132 @@
--- واجهة GUI باستخدام مكتبة Roblox
-local ScreenGui = Instance.new("ScreenGui")
-local Frame = Instance.new("Frame")
-local killBotsButton = Instance.new("TextButton")
-local dailyQuestsButton = Instance.new("TextButton")
-local autoKillButton = Instance.new("TextButton")
-local fastTrialButton = Instance.new("TextButton")
-local openGateButton = Instance.new("TextButton")
+-- Noob_x Hub for Anime Fighters Simulator
+local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
+local Noob_x = library.CreateLib("Noob_x Hub", "Ocean")
 
-ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
-Frame.Parent = ScreenGui
-Frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-Frame.Position = UDim2.new(0.05, 0, 0.2, 0)
-Frame.Size = UDim2.new(0, 200, 0, 250)
+-- AutoFarm Tab
+local autoFarm = Noob_x:NewTab("AutoFarm")
+local autoFarmSection = autoFarm:NewSection("Farming & Killing")
 
-local buttons = {
-    {killBotsButton, "قتل البوتات القريبة"},
-    {dailyQuestsButton, "تنفيذ المهام اليومية"},
-    {autoKillButton, "أوتو قتل البوتات"},
-    {fastTrialButton, "إنهاء التريل"},
-    {openGateButton, "فتح البوابة الثانية"}
-}
+autoFarmSection:NewToggle("Auto Kill Nearby", "Kills nearby enemies automatically", function(state)
+    _G.AutoKill = state
+end)
 
-for i, btnData in ipairs(buttons) do
-    local btn, text = unpack(btnData)
-    btn.Parent = Frame
-    btn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-    btn.Position = UDim2.new(0, 10, 0, 10 + (i - 1) * 45)
-    btn.Size = UDim2.new(0, 180, 0, 40)
-    btn.Text = text
-    btn.TextColor3 = Color3.fromRGB(255, 255, 255)
-end
+autoFarmSection:NewToggle("Auto Click Damage", "Clicks to deal damage automatically", function(state)
+    _G.AutoClick = state
+end)
 
--- الوظائف
-function killNearbyBots()
-    for _, enemy in pairs(workspace.Enemies:GetChildren()) do
-        if enemy:FindFirstChild("Humanoid") and enemy:FindFirstChild("HumanoidRootPart") then
-            if enemy.Humanoid.Health > 0 then
-                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = enemy.HumanoidRootPart.CFrame
-                wait(0.2)
-                game:GetService("VirtualInputManager"):SendKeyEvent(true, "F", false, game)
-            end
+autoFarmSection:NewToggle("Auto Collect Yen", "Collects Yen automatically", function(state)
+    _G.AutoYen = state
+end)
+
+autoFarmSection:NewTextBox("Target Enemy Name", "Enter enemy name to auto kill", function(txt)
+    _G.TargetEnemy = txt
+end)
+
+autoFarmSection:NewButton("Refresh Enemies", "Refresh enemy list", function()
+    print("Enemy list refreshed")
+end)
+
+autoFarmSection:NewToggle("Auto Meteor", "Collects meteors automatically", function(state)
+    _G.AutoMeteor = state
+end)
+
+autoFarmSection:NewToggle("Auto Time Trial", "Starts time trial automatically", function(state)
+    _G.AutoTrial = state
+end)
+
+autoFarmSection:NewToggle("Auto Skip Room", "Skips trial rooms automatically", function(state)
+    _G.AutoSkip = state
+end)
+
+-- Egg Tab
+local eggTab = Noob_x:NewTab("Egg")
+local eggSection = eggTab:NewSection("Egg Opening")
+
+eggSection:NewDropdown("Select Egg Type", "Choose egg to open", {"Basic", "Legendary", "Mythic"}, function(choice)
+    _G.EggType = choice
+end)
+
+eggSection:NewToggle("Auto Open Eggs", "Opens eggs automatically", function(state)
+    _G.AutoEgg = state
+end)
+
+-- Teleport Tab
+local teleportTab = Noob_x:NewTab("Teleport")
+local teleportSection = teleportTab:NewSection("Teleport Zones")
+
+teleportSection:NewButton("Teleport to Spawn", "Teleports to spawn area", function()
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(0, 5, 0)
+end)
+
+teleportSection:NewButton("Teleport to Boss", "Teleports to boss area", function()
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(1000, 5, 1000)
+end)
+
+teleportSection:NewButton("Teleport to Trial", "Teleports to time trial", function()
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(2000, 5, 2000)
+end)
+
+teleportSection:NewButton("Teleport to Meteor Zone", "Teleports to meteor zone", function()
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(3000, 5, 3000)
+end)
+
+-- Misc Tab
+local miscTab = Noob_x:NewTab("Misc")
+local miscSection = miscTab:NewSection("Performance & Settings")
+
+miscSection:NewToggle("Low Graphics Mode", "Improves performance by reducing effects", function(state)
+    if state then
+        for _, v in pairs(game.Lighting:GetChildren()) do
+            v.Enabled = false
         end
-    end
-end
-
-function completeDailyQuests()
-    for _, quest in pairs(workspace.Quests:GetChildren()) do
-        if quest:FindFirstChild("Complete") then
-            quest.Complete:FireServer()
-        end
-    end
-end
-
-function autoKillLoop()
-    while autoKillEnabled do
-        killNearbyBots()
-        wait(3)
-    end
-end
-
-function finishTrial()
-    local trial = workspace.Trials:FindFirstChild("CurrentTrial")
-    if trial then
-        trial:Destroy()
-    end
-end
-
-function pressGateButton()
-    local gateButton = workspace:FindFirstChild("GateButton2")
-    if gateButton and gateButton:IsA("ClickDetector") then
-        fireclickdetector(gateButton)
-    end
-end
-
--- ربط الأزرار بالوظائف
-killBotsButton.MouseButton1Click:Connect(killNearbyBots)
-dailyQuestsButton.MouseButton1Click:Connect(completeDailyQuests)
-autoKillEnabled = false
-autoKillButton.MouseButton1Click:Connect(function()
-    autoKillEnabled = not autoKillEnabled
-    if autoKillEnabled then
-        autoKillButton.Text = "إيقاف أوتو قتل"
-        spawn(autoKillLoop)
+        game.Lighting.GlobalShadows = false
+        game.Lighting.FogEnd = 100000
     else
-        autoKillButton.Text = "تشغيل أوتو قتل"
+        print("Graphics reset manually")
     end
 end)
-fastTrialButton.MouseButton1Click:Connect(finishTrial)
-openGateButton.MouseButton1Click:Connect(pressGateButton)
+
+miscSection:NewButton("Anti AFK", "Prevents being kicked for inactivity", function()
+    local vu = game:GetService("VirtualUser")
+    game:GetService("Players").LocalPlayer.Idled:connect(function()
+        vu:Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+        wait(1)
+        vu:Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+    end)
+end)
+
+
+
+local SettingsTab = Window:MakeTab({
+    Name = "الإعدادات / Settings",
+    Icon = "rbxassetid://7734053494",
+    PremiumOnly = false
+})
+
+local currentLanguage = "Arabic"
+
+local function updateLanguage()
+    if currentLanguage == "Arabic" then
+        AutoFarmTab:SetName("الفارم التلقائي")
+        EggTab:SetName("البيض")
+        TeleportTab:SetName("النقل")
+        MiscTab:SetName("متفرقات")
+        SettingsTab:SetName("الإعدادات")
+    else
+        AutoFarmTab:SetName("AutoFarm")
+        EggTab:SetName("Egg")
+        TeleportTab:SetName("Teleport")
+        MiscTab:SetName("Misc")
+        SettingsTab:SetName("Settings")
+    end
+end
+
+SettingsTab:AddDropdown({
+    Name = "اختر اللغة / Select Language",
+    Default = "Arabic",
+    Options = {"Arabic", "English"},
+    Callback = function(Value)
+        currentLanguage = Value
+        updateLanguage()
+    end
+})
