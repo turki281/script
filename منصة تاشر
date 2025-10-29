@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>منصة عرض السيرفرات والحسابات الفخمة</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
+
+- {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  }
+
+body {
+font-family: ‘Cairo’, sans-serif;
+background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+min-height: 100vh;
+padding: 20px;
+position: relative;
+overflow-x: hidden;
+}
+
+body::before {
+content: ‘’;
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background:
+radial-gradient(circle at 20% 50%, rgba(138, 43, 226, 0.2), transparent 50%),
+radial-gradient(circle at 80% 80%, rgba(255, 215, 0, 0.15), transparent 50%),
+radial-gradient(circle at 40% 20%, rgba(75, 0, 130, 0.2), transparent 50%);
+pointer-events: none;
+z-index: 0;
+animation: gradientShift 15s ease infinite;
+}
+
+@keyframes gradientShift {
+0%, 100% { opacity: 1; }
+50% { opacity: 0.8; }
+}
+
+.container {
+max-width: 1600px;
+margin: 0 auto;
+position: relative;
+z-index: 1;
+}
+
+/* Header Styles */
+header {
+text-align: center;
+color: white;
+margin-bottom: 60px;
+padding: 40px 20px;
+background: rgba(255, 255, 255, 0.05);
+backdrop-filter: blur(10px);
+border-radius: 30px;
+border: 1px solid rgba(255, 255, 255, 0.1);
+box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+header h1 {
+font-size: 3.5em;
+margin-bottom: 20px;
+text-shadow: 0 0 30px rgba(138, 43, 226, 0.8), 0 0 60px rgba(255, 215, 0, 0.5);
+font-weight: 900;
+background: linear-gradient(45deg, #ffd700, #ff6ec7, #7c3aed, #ffd700);
+background-size: 300% 300%;
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+animation: gradientFlow 5s ease infinite;
+}
+
+@keyframes gradientFlow {
+0%, 100% { background-position: 0% 50%; }
+50% { background-position: 100% 50%; }
+}
+
+header p {
+font-size: 1.4em;
+opacity: 0.95;
+text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+margin-bottom: 30px;
+}
+
+.add-server-btn {
+display: inline-block;
+background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+color: white;
+padding: 15px 40px;
+border-radius: 50px;
+text-decoration: none;
+font-weight: bold;
+font-size: 1.2em;
+transition: all 0.3s;
+box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+cursor: pointer;
+border: none;
+}
+
+.add-server-btn:hover {
+transform: translateY(-3px);
+box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
+}
+
+/* Filter Tabs */
+.filter-tabs {
+display: flex;
+justify-content: center;
+gap: 12px;
+margin-bottom: 40px;
+flex-wrap: wrap;
+max-width: 100%;
+overflow-x: auto;
+padding: 10px 0;
+}
+
+.filter-tab {
+background: rgba(255, 255, 255, 0.1);
+backdrop-filter: blur(10px);
+color: white;
+padding: 10px 20px;
+border-radius: 50px;
+cursor: pointer;
+transition: all 0.3s;
+border: 2px solid rgba(255, 255, 255, 0.2);
+font-weight: 600;
+white-space: nowrap;
+font-size: 0.95em;
+flex-shrink: 0;
+}
+
+.filter-tab:hover {
+background: rgba(255, 255, 255, 0.2);
+transform: translateY(-2px);
+}
+
+.filter-tab.active {
+background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+border-color: transparent;
+box-shadow: 0 5px 20px rgba(102, 126, 234, 0.5);
+}
+
+/* Products Grid */
+.products-grid {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+gap: 40px;
+margin-bottom: 50px;
+}
+
+.product-card {
+background: rgba(255, 255, 255, 0.95);
+border-radius: 25px;
+overflow: hidden;
+box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+transition: all 0.4s;
+position: relative;
+border: 2px solid transparent;
+}
+
+.product-card:hover {
+transform: translateY(-15px) scale(1.02);
+box-shadow: 0 30px 80px rgba(138, 43, 226, 0.4);
+border-color: rgba(138, 43, 226, 0.5);
+}
+
+.product-image-container {
+position: relative;
+height: 250px;
+overflow: hidden;
+background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.product-image {
+width: 100%;
+height: 100%;
+object-fit: cover;
+transition: transform 0.6s;
+}
+
+.product-card:hover .product-image {
+transform: scale(1.15) rotate(2deg);
+}
+
+.category-badge {
+position: absolute;
+top: 15px;
+right: 15px;
+background: rgba(0, 0, 0, 0.7);
+backdrop-filter: blur(10px);
+color: white;
+padding: 8px 16px;
+border-radius: 20px;
+font-size: 0.85em;
+font-weight: 700;
+z-index: 2;
+}
+
+.product-content {
+padding: 25px;
+}
+
+.product-title {
+font-size: 1.8em;
+color: #1a202c;
+margin-bottom: 15px;
+font-weight: 900;
+line-height: 1.3;
+}
+
+.product-short-desc {
+color: #718096;
+font-size: 1.05em;
+margin-bottom: 18px;
+line-height: 1.6;
+}
+
+.product-features {
+display: flex;
+flex-wrap: wrap;
+gap: 10px;
+margin-bottom: 18px;
+}
+
+.feature-badge {
+background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+color: white;
+padding: 6px 14px;
+border-radius: 15px;
+font-size: 0.9em;
+font-weight: 600;
+box-shadow: 0 4px 15px rgba(245, 87, 108, 0.3);
+}
+
+.product-link {
+display: block;
+text-align: center;
+background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+color: white;
+padding: 14px 25px;
+border-radius: 15px;
+text-decoration: none;
+font-weight: bold;
+transition: all 0.3s;
+margin-top: 12px;
+box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+.product-link:hover {
+transform: translateY(-3px);
+box-shadow: 0 12px 35px rgba(102, 126, 234, 0.6);
+}
+
+/* Modal Styles */
+.modal {
+display: none;
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: rgba(0, 0, 0, 0.8);
+backdrop-filter: blur(5px);
+z-index: 2000;
+overflow-y: auto;
+padding: 20px;
+}
+
+.modal-content {
+background: rgba(255, 255, 255, 0.98);
+border-radius: 30px;
+padding: 40px;
+max-width: 700px;
+margin: 50px auto;
+box-shadow: 0 30px 90px rgba(0, 0, 0, 0.5);
+position: relative;
+}
+
+.modal-close {
+position: absolute;
+top: 20px;
+left: 20px;
+font-size: 2em;
+cursor: pointer;
+color: #718096;
+transition: all 0.3s;
+}
+
+.modal-close:hover {
+color: #f5576c;
+transform: rotate(90deg);
+}
+
+.modal h2 {
+text-align: center;
+background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+font-size: 2.2em;
+margin-bottom: 30px;
+font-weight: 900;
+}
+
+.form-group {
+margin-bottom: 25px;
+}
+
+.form-group label {
+display: block;
+color: #2d3748;
+font-weight: 700;
+margin-bottom: 10px;
+font-size: 1.05em;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+width: 100%;
+padding: 14px;
+border: 2px solid #e2e8f0;
+border-radius: 12px;
+font-size: 1em;
+background: #f7fafc;
+font-family: ‘Cairo’, sans-serif;
+transition: all 0.3s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+outline: none;
+border-color: #667eea;
+box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.form-group textarea {
+resize: vertical;
+min-height: 100px;
+}
+
+.btn {
+background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+color: white;
+padding: 14px 30px;
+border: none;
+border-radius: 15px;
+font-size: 1.1em;
+font-weight: bold;
+cursor: pointer;
+width: 100%;
+margin-top: 10px;
+transition: all 0.3s;
+box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+}
+
+.btn:hover {
+transform: translateY(-3px);
+box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
+}
+
+.btn-secondary {
+background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+}
+
+.btn-danger {
+background: linear-gradient(135deg, #f5576c 0%, #f093fb 100%);
+}
+
+.btn-success {
+background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%);
+}
+
+/* Admin Panel */
+.admin-toggle {
+position: fixed;
+bottom: 30px;
+left: 30px;
+background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+color: white;
+padding: 18px 30px;
+border-radius: 50px;
+cursor: pointer;
+font-weight: bold;
+z-index: 1000;
+box-shadow: 0 10px 40px rgba(102, 126, 234, 0.5);
+transition: all 0.3s;
+}
+
+.admin-toggle:hover {
+transform: scale(1.08);
+box-shadow: 0 15px 50px rgba(102, 126, 234, 0.7);
+}
+
+.pending-badge {
+position: absolute;
+top: -5px;
+right: -5px;
+background: #f5576c;
+color: white;
+width: 25px;
+height: 25px;
+border-radius: 50%;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 0.8em;
+font-weight: bold;
+}
+
+.pending-list {
+max-height: 400px;
+overflow-y: auto;
+margin-bottom: 20px;
+}
+
+.pending-item {
+background: #f7fafc;
+padding: 20px;
+border-radius: 15px;
+margin-bottom: 15px;
+border: 2px solid #e2e8f0;
+}
+
+.pending-item h4 {
+color: #2d3748;
+margin-bottom: 10px;
+font-size: 1.3em;
+}
+
+.pending-item p {
+color: #718096;
+margin-bottom: 8px;
+}
+
+.pending-actions {
+display: flex;
+gap: 10px;
+margin-top: 15px;
+}
+
+.pending-actions button {
+flex: 1;
+padding: 10px;
+border: none;
+border-radius: 10px;
+cursor: pointer;
+font-weight: bold;
+transition: all 0.3s;
+}
+
+/* Messages */
+.message {
+padding: 15px;
+border-radius: 12px;
+margin-bottom: 20px;
+text-align: center;
+font-weight: 600;
+animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+from {
+opacity: 0;
+transform: translateY(-10px);
+}
+to {
+opacity: 1;
+transform: translateY(0);
+}
+}
+
+.message.success {
+background: #d4edda;
+color: #155724;
+border: 2px solid #c3e6cb;
+}
+
+.message.error {
+background: #f8d7da;
+color: #721c24;
+border: 2px solid #f5c6cb;
+}
+
+.message.info {
+background: #d1ecf1;
+color: #0c5460;
+border: 2px solid #bee5eb;
+}
+
+/* Footer */
+.footer {
+text-align: center;
+color: white;
+margin-top: 60px;
+padding: 30px;
+background: rgba(255, 255, 255, 0.05);
+backdrop-filter: blur(10px);
+border-radius: 20px;
+border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer p {
+font-size: 1.1em;
+opacity: 0.9;
+}
+
+/* Responsive */
+@media(max-width: 768px) {
+header h1 {
+font-size: 2.2em;
+}
+
+.products-grid {
+grid-template-columns: 1fr;
+gap: 25px;
+}
+
+.admin-toggle {
+bottom: 20px;
+left: 20px;
+padding: 12px 20px;
+font-size: 0.95em;
+}
+
+.filter-tabs {
+gap: 10px;
+}
+
+.filter-tab {
+padding: 10px 20px;
+font-size: 0.9em;
+}
+}
+
+/* Loading Animation */
+.loading {
+text-align: center;
+padding: 40px;
+color: white;
+font-size: 1.2em;
+}
+
+.spinner {
+border: 4px solid rgba(255, 255, 255, 0.3);
+border-top: 4px solid #667eea;
+border-radius: 50%;
+width: 50px;
+height: 50px;
+animation: spin 1s linear infinite;
+margin: 20px auto;
+}
+
+@keyframes spin {
+0% { transform: rotate(0deg); }
+100% { transform: rotate(360deg); }
+}
+</style>
+
+</head>
+<body>
+
+<div class="container">
+  <header id="main-header">
+    <h1>🌟 منصة عرض السيرفرات والحسابات الفخمة</h1>
+    <p>انضم إلى مجتمعنا واعرض سيرفرك أو حسابك للجميع!</p>
+    <button class="add-server-btn" onclick="showAddModal()">➕ أضف سيرفرك/حسابك</button>
+  </header>
+
+  <div class="filter-tabs">
+    <div class="filter-tab active" data-category="الكل" onclick="filterCategory('الكل')">🌐 الكل</div>
+    <div class="filter-tab" data-category="سيرفر ديسكورد" onclick="filterCategory('سيرفر ديسكورد')">💬 ديسكورد</div>
+    <div class="filter-tab" data-category="ماين كرافت" onclick="filterCategory('ماين كرافت')">⛏ ماين كرافت</div>
+    <div class="filter-tab" data-category="فورتنايت" onclick="filterCategory('فورتنايت')">🎯 فورتنايت</div>
+    <div class="filter-tab" data-category="ببجي" onclick="filterCategory('ببجي')">🎮 ببجي</div>
+    <div class="filter-tab" data-category="روبلكس" onclick="filterCategory('روبلكس')">🎲 روبلكس</div>
+    <div class="filter-tab" data-category="فري فاير" onclick="filterCategory('فري فاير')">🔥 فري فاير</div>
+    <div class="filter-tab" data-category="كول اوف ديوتي" onclick="filterCategory('كول اوف ديوتي')">🎖 كول اوف ديوتي</div>
+    <div class="filter-tab" data-category="فيفا" onclick="filterCategory('فيفا')">⚽ فيفا</div>
+    <div class="filter-tab" data-category="جراند" onclick="filterCategory('جراند')">🚗 جراند</div>
+    <div class="filter-tab" data-category="ستيم" onclick="filterCategory('ستيم')">🎮 ستيم</div>
+    <div class="filter-tab" data-category="بلايستيشن" onclick="filterCategory('بلايستيشن')">🎮 بلايستيشن</div>
+    <div class="filter-tab" data-category="اكسبوكس" onclick="filterCategory('اكسبوكس')">🎮 اكسبوكس</div>
+    <div class="filter-tab" data-category="نينتندو" onclick="filterCategory('نينتندو')">🎮 نينتندو</div>
+    <div class="filter-tab" data-category="تركمان" onclick="filterCategory('تركمان')">🇹🇷 تركمان</div>
+    <div class="filter-tab" data-category="عرب" onclick="filterCategory('عرب')">🇸🇦 عرب</div>
+    <div class="filter-tab" data-category="أعضاء" onclick="filterCategory('أعضاء')">👥 أعضاء</div>
+    <div class="filter-tab" data-category="بيع وشراء" onclick="filterCategory('بيع وشراء')">💰 بيع وشراء</div>
+    <div class="filter-tab" data-category="هوس" onclick="filterCategory('هوس')">🎪 هوس</div>
+    <div class="filter-tab" data-category="كوميرتس" onclick="filterCategory('كوميرتس')">🛒 كوميرتس</div>
+    <div class="filter-tab" data-category="انمي" onclick="filterCategory('انمي')">🎌 انمي</div>
+    <div class="filter-tab" data-category="تصاميم" onclick="filterCategory('تصاميم')">🎨 تصاميم</div>
+    <div class="filter-tab" data-category="برمجة" onclick="filterCategory('برمجة')">💻 برمجة</div>
+    <div class="filter-tab" data-category="موسيقى" onclick="filterCategory('موسيقى')">🎵 موسيقى</div>
+    <div class="filter-tab" data-category="رياضة" onclick="filterCategory('رياضة')">⚽ رياضة</div>
+    <div class="filter-tab" data-category="تعليم" onclick="filterCategory('تعليم')">📚 تعليم</div>
+    <div class="filter-tab" data-category="نتفلكس" onclick="filterCategory('نتفلكس')">🎬 نتفلكس</div>
+    <div class="filter-tab" data-category="شاهد" onclick="filterCategory('شاهد')">📺 شاهد</div>
+    <div class="filter-tab" data-category="سبوتيفاي" onclick="filterCategory('سبوتيفاي')">🎧 سبوتيفاي</div>
+    <div class="filter-tab" data-category="يوتيوب بريميوم" onclick="filterCategory('يوتيوب بريميوم')">▶ يوتيوب</div>
+    <div class="filter-tab" data-category="تليجرام" onclick="filterCategory('تليجرام')">✈ تليجرام</div>
+    <div class="filter-tab" data-category="واتساب" onclick="filterCategory('واتساب')">📱 واتساب</div>
+    <div class="filter-tab" data-category="انستقرام" onclick="filterCategory('انستقرام')">📷 انستقرام</div>
+    <div class="filter-tab" data-category="تيك توك" onclick="filterCategory('تيك توك')">🎵 تيك توك</div>
+    <div class="filter-tab" data-category="تويتر" onclick="filterCategory('تويتر')">🐦 تويتر</div>
+    <div class="filter-tab" data-category="فيسبوك" onclick="filterCategory('فيسبوك')">📘 فيسبوك</div>
+    <div class="filter-tab" data-category="سناب شات" onclick="filterCategory('سناب شات')">👻 سناب شات</div>
+    <div class="filter-tab" data-category="بوتات ديسكورد" onclick="filterCategory('بوتات ديسكورد')">🤖 بوتات</div>
+    <div class="filter-tab" data-category="خدمات" onclick="filterCategory('خدمات')">🛠 خدمات</div>
+    <div class="filter-tab" data-category="أدوات" onclick="filterCategory('أدوات')">🔧 أدوات</div>
+    <div class="filter-tab" data-category="مجتمع" onclick="filterCategory('مجتمع')">🌍 مجتمع</div>
+  </div>
+
+  <div id="products-container" class="products-grid"></div>
+</div>
+
+<!-- Add/Edit Modal -->
+
+<div id="add-modal" class="modal">
+  <div class="modal-content">
+    <span class="modal-close" onclick="closeAddModal()">✕</span>
+    <h2>✨ أضف سيرفرك/حسابك</h2>
+    <div id="add-message"></div>
+
+
+<div class="form-group">
+  <label>📁 الفئة:</label>
+  <select id="add-category">
+    <optgroup label="🎮 سيرفرات وألعاب">
+      <option value="سيرفر ديسكورد">💬 سيرفر ديسكورد</option>
+      <option value="ماين كرافت">⛏ ماين كرافت</option>
+      <option value="فورتنايت">🎯 فورتنايت</option>
+      <option value="ببجي">🎮 ببجي</option>
+      <option value="روبلكس">🎲 روبلكس</option>
+      <option value="فري فاير">🔥 فري فاير</option>
+      <option value="كول اوف ديوتي">🎖 كول اوف ديوتي</option>
+      <option value="فيفا">⚽ فيفا</option>
+      <option value="جراند">🚗 جراند</option>
+    </optgroup>
+    <optgroup label="🎮 منصات الألعاب">
+      <option value="ستيم">🎮 ستيم</option>
+      <option value="بلايستيشن">🎮 بلايستيشن</option>
+      <option value="اكسبوكس">🎮 اكسبوكس</option>
+      <option value="نينتندو">🎮 نينتندو</option>
+    </optgroup>
+    <optgroup label="🌍 مجتمعات">
+      <option value="تركمان">🇹🇷 تركمان</option>
+      <option value="عرب">🇸🇦 عرب</option>
+      <option value="أعضاء">👥 أعضاء</option>
+      <option value="مجتمع">🌍 مجتمع</option>
+    </optgroup>
+    <optgroup label="💰 بيع وخدمات">
+      <option value="بيع وشراء">💰 بيع وشراء</option>
+      <option value="كوميرتس">🛒 كوميرتس</option>
+      <option value="خدمات">🛠 خدمات</option>
+    </optgroup>
+    <optgroup label="🎬 منصات ترفيهية">
+      <option value="نتفلكس">🎬 نتفلكس</option>
+      <option value="شاهد">📺 شاهد</option>
+      <option value="سبوتيفاي">🎧 سبوتيفاي</option>
+      <option value="يوتيوب بريميوم">▶ يوتيوب بريميوم</option>
+    </optgroup>
+    <optgroup label="📱 سوشيال ميديا">
+      <option value="تليجرام">✈ تليجرام</option>
+      <option value="واتساب">📱 واتساب</option>
+      <option value="انستقرام">📷 انستقرام</option>
+      <option value="تيك توك">🎵 تيك توك</option>
+      <option value="تويتر">🐦 تويتر</option>
+      <option value="فيسبوك">📘 فيسبوك</option>
+      <option value="سناب شات">👻 سناب شات</option>
+    </optgroup>
+    <optgroup label="🎨 مواضيع متنوعة">
+      <option value="هوس">🎪 هوس</option>
+      <option value="انمي">🎌 انمي</option>
+      <option value="تصاميم">🎨 تصاميم</option>
+      <option value="برمجة">💻 برمجة</option>
+      <option value="موسيقى">🎵 موسيقى</option>
+      <option value="رياضة">⚽ رياضة</option>
+      <option value="تعليم">📚 تعليم</option>
+      <option value="بوتات ديسكورد">🤖 بوتات ديسكورد</option>
+      <option value="أدوات">🔧 أدوات</option>
+    </optgroup>
+  </select>
+</div>
+
+<div class="form-group">
+  <label>📝 اسم السيرفر/الحساب:</label>
+  <input type="text" id="add-name" placeholder="مثال: سيرفر الألعاب العربي">
+</div>
+
+<div class="form-group">
+  <label>🖼 رابط الصورة:</label>
+  <input type="text" id="add-image" placeholder="https://example.com/image.jpg">
+</div>
+
+<div class="form-group">
+  <label>📄 الوصف القصير:</label>
+  <textarea id="add-short-desc" placeholder="وصف مختصر عن السيرفر أو الحساب"></textarea>
+</div>
+
+<div class="form-group">
+  <label>⭐ الميزة الأولى:</label>
+  <input type="text" id="add-feature-1" placeholder="مثال: +1000 عضو نشط">
+</div>
+
+<div class="form-group">
+  <label>⭐ الميزة الثانية:</label>
+  <input type="text" id="add-feature-2" placeholder="مثال: إدارة محترفة">
+</div>
+
+<div class="form-group">
+  <label>⭐ الميزة الثالثة:</label>
+  <input type="text" id="add-feature-3" placeholder="مثال: جوائز يومية">
+</div>
+
+<div class="form-group">
+  <label>🔗 رابط السيرفر/الحساب:</label>
+  <input type="text" id="add-url" placeholder="https://discord.gg/example">
+</div>
+
+<button class="btn" onclick="submitServer()">📤 إرسال للمراجعة</button>
+<button class="btn btn-secondary" onclick="closeAddModal()">إلغاء</button>
+
+
+  </div>
+</div>
+
+<!-- Admin Login Modal -->
+
+<div id="login-modal" class="modal">
+  <div class="modal-content">
+    <span class="modal-close" onclick="closeLoginModal()">✕</span>
+    <h2>🔐 تسجيل الدخول - لوحة التحكم</h2>
+    <div id="login-message"></div>
+
+
+<div class="form-group">
+  <label>🔑 كلمة المرور:</label>
+  <input type="password" id="login-password" placeholder="أدخل كلمة المرور">
+</div>
+
+<button class="btn" onclick="login()">دخول</button>
+<button class="btn btn-secondary" onclick="closeLoginModal()">إلغاء</button>
+
+
+  </div>
+</div>
+
+<!-- Admin Panel Modal -->
+
+<div id="admin-modal" class="modal">
+  <div class="modal-content">
+    <span class="modal-close" onclick="closeAdminModal()">✕</span>
+    <h2>⚙ لوحة التحكم</h2>
+    <div id="admin-message"></div>
+
+
+<h3 style="margin: 20px 0; color: #2d3748;">📋 طلبات الانتظار (<span id="pending-count">0</span>)</h3>
+<div id="pending-list" class="pending-list"></div>
+
+<button class="btn btn-secondary" onclick="closeAdminModal()">إغلاق</button>
+
+
+  </div>
+</div>
+
+<div class="admin-toggle" onclick="showLoginModal()">
+  🔧 لوحة التحكم
+  <span id="pending-badge" class="pending-badge" style="display: none;">0</span>
+</div>
+
+<footer class="footer">
+  <p>© 2025 جميع الحقوق محفوظة | منصة عرض السيرفرات والحسابات الفخمة 🌟</p>
+</footer>
+
+<script>
+// Global state
+const state = {
+  password: 'turkiali123',
+  approvedProducts: [],
+  pendingProducts: [],
+  currentFilter: 'الكل',
+  isLoggedIn: false
+};
+
+// Initialize from storage
+async function initializeData() {
+  try {
+    const approvedData = await window.storage.get('approved-products');
+    if (approvedData) {
+      state.approvedProducts = JSON.parse(approvedData.value);
+    }
+    
+    const pendingData = await window.storage.get('pending-products');
+    if (pendingData) {
+      state.pendingProducts = JSON.parse(pendingData.value);
+    }
+  } catch (error) {
+    console.log('No existing data, starting fresh');
+  }
+  
+  renderProducts();
+  updatePendingBadge();
+}
+
+// Save data to storage
+async function saveData() {
+  try {
+    await window.storage.set('approved-products', JSON.stringify(state.approvedProducts));
+    await window.storage.set('pending-products', JSON.stringify(state.pendingProducts));
+  } catch (error) {
+    console.error('Error saving data:', error);
+  }
+}
+
+// Render products
+function renderProducts() {
+  const container = document.getElementById('products-container');
+  let filtered = state.approvedProducts;
+  
+  if (state.currentFilter !== 'الكل') {
+    filtered = state.approvedProducts.filter(p => p.category === state.currentFilter);
+  }
+  
+  if (filtered.length === 0) {
+    container.innerHTML = '<div class="loading">😔 لا توجد عناصر في هذه الفئة حالياً</div>';
+    return;
+  }
+  
+  container.innerHTML = filtered.map((p, i) => `
+    <div class="product-card">
+      <div class="product-image-container">
+        <span class="category-badge">${p.category}</span>
+        <img src="${p.image}" alt="${p.name}" class="product-image" 
+             onerror="this.src='https://via.placeholder.com/500x250/667eea/ffffff?text=${encodeURIComponent(p.name)}'">
+      </div>
+      <div class="product-content">
+        <h3 class="product-title">${p.name}</h3>
+        <p class="product-short-desc">${p.shortDesc}</p>
+        <div class="product-features">
+          ${p.features.map(f => <span class="feature-badge">${f}</span>).join('')}
+        </div>
+        <a href="${p.url}" target="_blank" class="product-link">🔗 زيارة الرابط</a>
+      </div>
+    </div>
+  `).join('');
+}
+
+// Filter by category
+function filterCategory(category) {
+  state.currentFilter = category;
+  
+  document.querySelectorAll('.filter-tab').forEach(tab => {
+    tab.classList.remove('active');
+    if (tab.dataset.category === category) {
+      tab.classList.add('active');
+    }
+  });
+  
+  renderProducts();
+}
+
+// Show add modal
+function showAddModal() {
+  document.getElementById('add-modal').style.display = 'block';
+  clearAddForm();
+}
+
+// Close add modal
+function closeAddModal() {
+  document.getElementById('add-modal').style.display = 'none';
+  clearAddForm();
+}
+
+// Clear add form
+function clearAddForm() {
+  document.getElementById('add-category').value = 'سيرفر ديسكورد';
+  document.getElementById('add-name').value = '';
+  document.getElementById('add-image').value = '';
+  document.getElementById('add-short-desc').value = '';
+  document.getElementById('add-feature-1').value = '';
+  document.getElementById('add-feature-2').value = '';
+  document.getElementById('add-feature-3').value = '';
+  document.getElementById('add-url').value = '';
+  document.getElementById('add-message').innerHTML = '';
+}
+
+// Submit server
+async function submitServer() {
+  const category = document.getElementById('add-category').value;
+  const name = document.getElementById('add-name').value.trim();
+  const image = document.getElementById('add-image').value.trim();
+  const shortDesc = document.getElementById('add-short-desc').value.trim();
+  const feature1 = document.getElementById('add-feature-1').value.trim();
+  const feature2 = document.getElementById('add-feature-2').value.trim();
+  const feature3 = document.getElementById('add-feature-3').value.trim();
+  const url = document.getElementById('add-url').value.trim();
+  
+  const msg = document.getElementById('add-message');
+  
+  if (!name || !image || !shortDesc || !feature1 || !feature2 || !feature3 || !url) {
+    msg.innerHTML = '<div class="message error">❌ يرجى ملء جميع الحقول!</div>';
+    setTimeout(() => msg.innerHTML = '', 3000);
+    return;
+  }
+  
+  const product = {
+    id: Date.now(),
+    category,
+    name,
+    image,
+    shortDesc,
+    features: [feature1, feature2, feature3],
+    url,
+    submittedAt: new Date().toISOString()
+  };
+  
+  state.pendingProducts.push(product);
+  await saveData();
+  updatePendingBadge();
+  
+  msg.innerHTML = '<div class="message success">✅ تم إرسال طلبك بنجاح! سيتم مراجعته من قبل الإدارة.</div>';
+  
+  setTimeout(() => {
+    closeAddModal();
+  }, 2000);
+}
+
+// Show login modal
+function showLoginModal() {
+  document.getElementById('login-modal').style.display = 'block';
+  document.getElementById('login-password').value = '';
+  document.getElementById('login-message').innerHTML = '';
+}
+
+// Close login modal
+function closeLoginModal() {
+  document.getElementById('login-modal').style.display = 'none';
+  document.getElementById('login-password').value = '';
+  document.getElementById('login-message').innerHTML = '';
+}
+
+// Login
+function login() {
+  const password = document.getElementById('login-password').value;
+  const msg = document.getElementById('login-message');
+  
+  if (password === state.password) {
+    state.isLoggedIn = true;
+    msg.innerHTML = '<div class="message success">✅ تم تسجيل الدخول بنجاح!</div>';
+    
+    setTimeout(() => {
+      closeLoginModal();
+      showAdminModal();
+    }, 800);
+  } else {
+    msg.innerHTML = '<div class="message error">❌ كلمة المرور خاطئة!</div>';
+    setTimeout(() => msg.innerHTML = '', 2500);
+  }
+}
+
+// Show admin modal
+function showAdminModal() {
+  if (!state.isLoggedIn) {
+    showLoginModal();
+    return;
+  }
+  
+  document.getElementById('admin-modal').style.display = 'block';
+  renderPendingList();
+}
+
+// Close admin modal
+function closeAdminModal() {
+  document.getElementById('admin-modal').style.display = 'none';
+  document.getElementById('admin-message').innerHTML = '';
+}
+
+// Render pending list
+function renderPendingList() {
+  const container = document.getElementById('pending-list');
+  const count = document.getElementById('pending-count');
+  
+  count.textContent = state.pendingProducts.length;
+  
+  if (state.pendingProducts.length === 0) {
+    container.innerHTML = '<div class="message info">📭 لا توجد طلبات في الانتظار</div>';
+    return;
+  }
+  
+  container.innerHTML = state.pendingProducts.map((p, index) => `
+    <div class="pending-item">
+      <h4>🎯 ${p.name}</h4>
+      <p><strong>الفئة:</strong> ${p.category}</p>
+      <p><strong>الوصف:</strong> ${p.shortDesc}</p>
+      <p><strong>الميزات:</strong> ${p.features.join(' • ')}</p>
+      <p><strong>الرابط:</strong> <a href="${p.url}" target="_blank">${p.url}</a></p>
+      <p style="font-size: 0.9em; color: #a0aec0;"><strong>تاريخ الإرسال:</strong> ${new Date(p.submittedAt).toLocaleString('ar')}</p>
+      
+      <div class="pending-actions">
+        <button class="btn btn-success" onclick="approveProduct(${index})" style="flex: 1;">
+          ✅ قبول
+        </button>
+        <button class="btn btn-danger" onclick="rejectProduct(${index})" style="flex: 1;">
+          ❌ رفض
+        </button>
+      </div>
+    </div>
+  `).join('');
+}
+
+// Approve product
+async function approveProduct(index) {
+  const product = state.pendingProducts[index];
+  state.approvedProducts.push(product);
+  state.pendingProducts.splice(index, 1);
+  
+  await saveData();
+  renderProducts();
+  renderPendingList();
+  updatePendingBadge();
+  
+  const msg = document.getElementById('admin-message');
+  msg.innerHTML = '<div class="message success">✅ تم قبول العنصر ونشره!</div>';
+  setTimeout(() => msg.innerHTML = '', 3000);
+}
+
+// Reject product
+async function rejectProduct(index) {
+  if (confirm('⚠ هل أنت متأكد من رفض هذا الطلب؟')) {
+    state.pendingProducts.splice(index, 1);
+    
+    await saveData();
+    renderPendingList();
+    updatePendingBadge();
+    
+    const msg = document.getElementById('admin-message');
+    msg.innerHTML = '<div class="message info">🗑 تم رفض الطلب</div>';
+    setTimeout(() => msg.innerHTML = '', 3000);
+  }
+}
+
+// Update pending badge
+function updatePendingBadge() {
+  const badge = document.getElementById('pending-badge');
+  const count = state.pendingProducts.length;
+  
+  if (count > 0) {
+    badge.textContent = count;
+    badge.style.display = 'flex';
+  } else {
+    badge.style.display = 'none';
+  }
+}
+
+// Close modals on outside click
+window.onclick = function(event) {
+  if (event.target.classList.contains('modal')) {
+    event.target.style.display = 'none';
+  }
+}
+
+// Initialize on page load
+window.addEventListener('DOMContentLoaded', () => {
+  initializeData();
+});
+</script>
+
+</body>
+</html>
